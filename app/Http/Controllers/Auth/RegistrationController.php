@@ -16,7 +16,7 @@ class RegistrationController extends Controller
         $newuser= $request->validated();
         $newuser['password']=Hash::make($newuser['password']);
         $newuser['role']='user';
-        $newuser['status']='active';
+        $newuser['status']='none';
 
         $user = User::create($newuser);
         $success['token']=$user->createToken('user',['app:all'])->plainTextToken;

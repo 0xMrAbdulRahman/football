@@ -35,4 +35,13 @@ class LoginController extends Controller
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
     }
+    public function logout(Request $request)
+{
+    // Revoke the current token that was used to authenticate the request
+    $request->user()->currentAccessToken()->delete();
+
+    return response()->json([
+        'message' => 'Logged out successfully'
+    ], 200);
+}
 }

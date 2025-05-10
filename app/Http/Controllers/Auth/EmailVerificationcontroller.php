@@ -21,19 +21,40 @@ class EmailVerificationcontroller extends Controller
         
         $this->otp=new Otp;
     }
-    public function send_email_verification(Request $request){
-        $request->user()->notify(new RegisterNotification());
-        $success['success']=true;
-        return response()->json($success,200);
+    public function send_email_verification(Request $request)
+    {
+        $user = auth()->user();
+    
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not authenticated.'
+            ], 401);
+        }
+    
+        if ($user->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Email already verified.'
+            ]);
+        }
+    
+        // Send OTP using your custom notification
+        $user->notify(new RegisterNotification());
+    
+        return response()->json([
+            'message' => 'Verification email sent!'
+        ]);
     }
+    
 
     public function email_verification(EmailVerificationRequest $request){
-        $otp2=$this->otp->validate($request->email, $request->otp);
-        if(!$otp2->status){
-            return response()->json(['error'=>$otp2],401);
-        }
+        $cachedOtp = cache()->get($request->email . '_otp');
+
+        if (!$cachedOtp || $cachedOtp != $request->otp) {
+                  return response()->json(['error' => 'Invalid or expired OTP'], 401);
+            }
         $user = User::where('email',$request->email)->first();
-        $user->update(['email_verified_at'=>now()]);
+        $user->update(['email_verified_at'=> now()]);
+        $user->update(['status'=>'active']);
         $success['success']=true;
         return response()->json($success,200);
 
