@@ -8,20 +8,27 @@ use Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
-    public function storeNews(newsrequest $request)
+    public function storeNews(NewsRequest $request)
     {
         $new = $request->validated();
-        $path = $request->image->store('news');
-        $application['image'] = $path;
     
+        $path = $request->file('image')->store('images', 'news');
+        $filename = basename($path);
+        $cvUrl = url('news/images/' . $filename);
+    
+   
+        $new['image_path'] = $filename;
+    
+
         $newupload = News::create($new);
+    
         $success['title'] = $newupload->title;
         $success['success'] = true;
+        $success['image'] = $cvUrl;
     
         return response()->json($success, 201);
-
-      
     }
+    
 
    
     public function adminIndex()
@@ -29,7 +36,7 @@ class NewsController extends Controller
         $news = News::where('status', 'pending')->get();
 
         return $news->map(function ($item) {
-            $item->image_url = asset('storage/' . $item->image_path);
+            $item->image_url = asset('news/images/' . $item->image_path);
             return $item;
         });
     }
@@ -56,13 +63,26 @@ class NewsController extends Controller
     }
 
     
-    public function home()
-    {
+    public function home($id = null)
+{
+    if ($id) {
+        $news = News::where('status', 'published')->where('id', $id)->first();
+
+        if (!$news) {
+            return response()->json(['error' => 'News item not found'], 404);
+        }
+
+        $news->image_url = url('news/images/' . $news->image_path);
+        return $news;
+    } else {
         $news = News::where('status', 'published')->latest()->get();
 
         return $news->map(function ($item) {
-            $item->image_url = asset('storage/' . $item->image_path);
+            $item->image_url = url('news/images/' . $item->image_path);
             return $item;
         });
     }
+}
+
+
 }

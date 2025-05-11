@@ -55,4 +55,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function answeredQuestions()
+{
+    return $this->belongsToMany(DailyQuestion::class, 'answered_questions');
+}
+
 }

@@ -17,24 +17,24 @@ use App\Http\Controllers\Admin\Storejournalistcontroller;
 
 // Public routes
 Route::post('/register', [RegistrationController::class, 'registration']);
-Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:5,1')->middleware('Checkvrification');;
+Route::post('/email-verification', [EmailVerificationcontroller::class, 'email_verification']);
+Route::get('/email-verification', action: [EmailVerificationcontroller::class, 'send_email_verification']);
+Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout']);
 Route::post('/password/forget_password', [ForgetPasswordcontroller::class, 'forgetpassword']);
 Route::post('/password/reset', [ResetPasswordcontroller::class, 'passwordreset'])->middleware('throttle:5,1');
 
 // Protected routes
-Route::middleware(['auth:sanctum'])->group(function() {
-
+Route::middleware(['auth:sanctum', 'Checkvrification'])->group(function() {
     Route::get('/profile', function (Request $request) {
         return $request->user();
     });
 
+
     Route::put('/profile', [ProfileUpdateController::class, 'update']);
 
 
-    Route::post('/email-verification', [EmailVerificationcontroller::class, 'email_verification'])->middleware('throttle:5,1');
-    Route::get('/email-verification', action: [EmailVerificationcontroller::class, 'send_email_verification'])->middleware('throttle:5,1');
-
+    
 
     Route::post('/add-admin', [AddAdminController::class, 'addAdmin'])->middleware('CheckSuperAdmin');
     Route::middleware(['auth:sanctum', 'role:admin'])->post('/add-journalist', [Storejournalistcontroller::class, 'addjournalist']);
@@ -53,9 +53,11 @@ Route::middleware(['auth:sanctum'])->group(function() {
     // Route for DailyChallenge
     //here send to mustafa to make two api here one to put questions and anoter to get questions
     Route::get('/daily-challenge', [DailyQuestionController::class, 'getDailyQuestion']);
+    Route::post('/daily-challenge/{id}', [DailyQuestionController::class, 'submitAnswer']);
 });
 
 
 Route::get('/news', [NewsController::class, 'home']);
+Route::get('/news/{id}', [NewsController::class, 'home']);
 
 Route::post('/applications', [ApplicationController::class, 'StoreCv']);

@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('daily_questions', function (Blueprint $table) {
-            $table->id();
-            $table->date('date');
-            $table->text('question');
-            $table->json('options');
-            $table->string('correct_answer');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->integer('score')->default(0);
         });
     }
 
@@ -26,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('daily_questions');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

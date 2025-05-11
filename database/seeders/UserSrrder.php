@@ -21,9 +21,10 @@ class UserSrrder extends Seeder
             'password' => Hash::make('Abdoemad2003@#admin'),
             'phone' => '01128671691',
             'gender' => 'male',
+            'role' => 'super admin',
             'status' => 'active',
         ]);
 
-        $user->assignRole('super admin');
+       
     }
 }

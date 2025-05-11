@@ -49,18 +49,16 @@ return [
         'CV' => [
             'driver' => 'local',
             'root' => public_path('CV'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL').'/public',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
         ],
-        'new' => [
-            'driver' => 'local',
-            'root' => public_path('news'),
-            'url' => env('APP_URL').'/storage',
-            'visibility' => 'public',
-            'throw' => false,
-            'report' => false,
+        'news' => [
+               'driver' => 'local',
+              'root' => public_path('news'),
+              'url' => env('APP_URL') . '/news',
+              'visibility' => 'public',
         ],
 
         's3' => [

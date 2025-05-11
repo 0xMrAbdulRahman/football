@@ -17,7 +17,7 @@ class Checkvrification
     {
         $user = $request->user();
 
-        if (!$user || $user->role !== 'active') {
+        if (!$user || $user->status !== 'active') {
             return response()->json([
                 'message' => 'Access denied. You are not verified.',
             ], 403);
