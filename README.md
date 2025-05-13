@@ -12,7 +12,8 @@
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
 1. i want make some changes news appear from new to old that's mean for last id to first id 
-2. add even feature to the project make modle has team 1 team 2 date location 
+2. add even feature to the project make modle has team 1 team 2 date location add referrer name and the prize
+3. add lead board to appear first three users have scores 
 
 - [Simple, fast routing engine](https://laravel.com/docs/routing).
 - [Powerful dependency injection container](https://laravel.com/docs/container).
